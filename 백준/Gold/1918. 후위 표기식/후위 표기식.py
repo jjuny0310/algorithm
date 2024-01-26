@@ -1,35 +1,33 @@
-s = input()
+prefix = input()
 
-temp = ""
 stack = []
-for i in s:
-    if i.isalpha():
-        temp += i
+postfix = ""
 
+operator = ["+", "-", "*", "/", "(", ")"]
+for i in range(len(prefix)):
+    if prefix[i] not in operator:
+        postfix += prefix[i]
     else:
-        if i == "(":
-            stack.append(i)
-        elif i == ")":
-            while stack:
-                if stack[-1] =="(":
-                    break
-                temp += stack.pop()
-            stack.pop()
-        elif i in ["*", "/"]:
-            while stack:
-                if stack[-1] in ["*", "/"]:
-                    temp += stack.pop()
-                else:
-                    break
-            stack.append(i)
-        elif i in ["+", "-"]:
+        if prefix[i] == "(":
+            stack.append(prefix[i])
+        elif prefix[i] == ")":
             while stack:
                 if stack[-1] == "(":
                     break
-                temp += stack.pop()
-            stack.append(i)
+                postfix += stack.pop()
+            stack.pop()
+        elif prefix[i] in ["*", "/"]:
+            while stack:
+                if stack[-1] in ["(", "+", "-"]:
+                    break
+                postfix += stack.pop()
+            stack.append(prefix[i])
+        elif prefix[i] in ["+", "-"]:
+            while stack:
+                if stack[-1] == "(":
+                    break
+                postfix += stack.pop()
+            stack.append(prefix[i])
 
-while stack:
-    temp += stack.pop()
-
-print(temp)
+answer = postfix + "".join(stack[::-1])
+print(answer)
