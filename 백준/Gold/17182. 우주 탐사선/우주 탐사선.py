@@ -1,28 +1,4 @@
-from collections import deque
-
-
-def bfs(start):
-    queue = deque()
-    queue.append((start, 0, {start}))
-
-    res = 1e9
-    while queue:
-        now, dist, visited = queue.popleft()
-        if res <= dist:
-            continue
-
-        if len(visited) == n:
-            res = min(res, dist)
-            continue
-
-        for _next in range(n):
-            if now == _next:
-                continue
-
-            if _next not in visited:
-                queue.append((_next, dist + graph[now][_next], visited.union({_next})))
-    return res
-
+from itertools import permutations
 
 n, k = map(int, input().split())
 
@@ -35,5 +11,20 @@ for l in range(n):
         for b in range(n):
             graph[a][b] = min(graph[a][b], graph[a][l] + graph[l][b])
 
-answer = bfs(k)
+cases = permutations([i for i in range(n)], n)
+answer = 1e9
+for case in cases:
+    if case[0] != k:
+        continue
+
+    cur = k
+    dist = 0
+    for i in case:
+        if i == k:
+            continue
+        dist += graph[cur][i]
+        if dist >= answer:
+            break
+        cur = i
+    answer = min(answer, dist)
 print(answer)
